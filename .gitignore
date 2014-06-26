@@ -1,0 +1,5 @@
+config.py
+*.pyc
+tmp/
+flask/
+app.db

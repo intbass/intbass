@@ -1,0 +1,31 @@
+{% extends "admin.html" %}
+
+{% block subcontent %}
+    <div class="jumbo">
+    <h2>Manage User {{ user.name }}</h2>
+    <form action="" method="post" name="login">
+    {{form.hidden_tag()}}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+            <span style="color: red;">{{ message }}</span><br>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% with errors = form.errors %}
+        {% if errors %}
+	        {% for error in errors %}
+	            <span style="color: red;">{{ error }}</span><br>
+	        {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h3>Username: {{ form.username(size=40) }}</h3>
+    <h3>Password: {{ form.password(size=40) }}</h3>
+    <h3>Email: {{ form.email(size=40) }}</h3>
+    <h3>Location: {{ form.location(size=40) }}</h3>
+    <h3>Role: {{ form.role }} <input type="submit" value="Update"></h3>
+    </form>
+    </div>
+{% endblock %}

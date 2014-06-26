@@ -1,0 +1,12 @@
+{% extends "admin.html" %}
+
+{% block subcontent %}
+    <div class="jumbo">
+    <h2>Users</h2>
+    <h3 class="link">
+    {% for user in users | sort(attribute='name') %}
+        <a href="{{ url_for('edituser', id=user.id) }}">{{ user.name }}</a>
+        {% if not loop.last %} | {% endif %}
+    {% endfor %}
+    </h3></div>
+{% endblock %}

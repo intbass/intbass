@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% if title %}
+    <title>{{title}}</title>
+    {% else %}
+    <title>International Bass Station</title>
+    {% endif %}
+  </head>
+  <body>
+   
+    <header>
+      <div class="container">
+        <!-- <img src="static/img/ibs_logo.png"> -->
+        <h1 class="logo"><a href="{{ url_for('home') }}">International Bass Station</a></h1>
+      {% if g.user.is_authenticated() %}
+        <span class="right">
+        Welcome, {{ g.user.name }}!
+        {% if g.user.is_admin() %}
+          <a href="{{ url_for('admin') }}">Admin</a> | 
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        </span>
+      {% else %}
+        <span class="right">
+            <a href="{{ url_for('login') }}">Sign In</a>
+        </span>
+      {% endif %}
+    </div>
+
+    </header> 
+     
+    <div class="container">
+    {% block content %}
+    {% endblock %}
+    </div>
+  </body>
+</html>

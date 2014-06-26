@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbo">
+<h2>Sign In</h2>
+<form action="" method="post" name="login">
+    {{form.hidden_tag()}}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+            <span style="color: red;">{{ message }}</span><br>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+    <h3>Username: {{form.username(size=40)}}<br>
+    {% for error in form.errors.username %}
+        <span style="color: red;">[{{error}}]</span>
+    {% endfor %}<br>
+    </h3>
+    <h3>Password: {{form.password(size=40)}}<br>
+    {% for error in form.errors.password %}
+        <span style="color: red;">[{{error}}]</span>
+    {% endfor %}<br>
+    </h3>
+    <h3>Remember Me {{form.remember_me}}
+    <input type="submit" value="Sign In"></h3>
+</form>
+</div>
+{% endblock %}
+
