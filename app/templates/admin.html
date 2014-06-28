@@ -3,23 +3,13 @@
 {% block content %}
     <div class="jumbo">
     <h3>Manage:
-       <a href="{{ url_for('admin_users') }}">Users</a>
-         | Sessions</h3>
-    </div>
-    <div class="jumbo">
+       <a href="{{ url_for('admin_users') }}">Users</a> |
+       <a href="{{ url_for('admin_files') }}">Files</a>
+    </h3>
     {% if self.subcontent() %}
         {% block subcontent %}{% endblock %}
     {% else %}
         <h2>Show some radio stats or something here.</h2>
     {% endif %}
-    {# <h2>Sessions:</h2>
-    <h3>
-    {% for session in sessions %}
-        {{ session.id }}
-        {{ session.name }}
-        {{ session.date }}
-        {{ session.filename }} 
-        <br>
-    {% endfor %} #}
     </div>
 {% endblock %}

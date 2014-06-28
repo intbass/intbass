@@ -1,4 +1,7 @@
-from app import db
+import os
+
+from app import db, app
+from mutagen.easyid3 import EasyID3 as id3
 
 ROLE_DISABLED = 0
 ROLE_USER = 1
@@ -38,17 +41,31 @@ class Users(db.Model):
         return unicode(self.id)
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
-
-class Sessions(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    filename = db.Column(db.String(250), unique = True)
-    date = db.Column(db.DateTime)
-    name = db.Column(db.String(128), unique = True)
-
-    def __repr__(self):
-        return '<Session %r>' % (self.name)
+        return '<User %r>' % self.name
 
 class Roles(db.Model):
-	id = db.Column(db.Integer, primary_key = True)
-	name = db.Column(db.String(64), unique = True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+
+class File:
+    def __init__(self, path):
+        if not os.access(path, os.R_OK):
+            raise ValueError
+        self.filename = path
+        self.name = os.path.relpath(path, app.config['FILE_PATH'])
+        self.size = os.stat(path).st_size
+        audioinfo = id3(path)
+        self.title = audioinfo['title']
+        self.date_recorded = audioinfo['date']
+        self.album = audioinfo['album']
+        self.artist = audioinfo['artist']
+
+    def __repr__(self):
+        return '<File %r>' % self.filename
+
+    #def size_fmt(num):
+    #    for x in ['bytes','KB','MB','GB']:
+    #        if num < 1024.0:
+    #            return "%3.1f%s" % (num, x)
+    #        num /= 1024.0
+    #    return "%3.1f%s" % (num, 'TB')

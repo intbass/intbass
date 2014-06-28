@@ -25,6 +25,6 @@ class UserEditForm(Form):
 				choices = [ ('0', 'disabled'),
 				('1', 'user'),
 				('2', 'dj'),
-				('11', 'admin') ])
+				('11', 'admin')])
 
 

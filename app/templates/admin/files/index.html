@@ -1,0 +1,19 @@
+{% extends "admin.html" %}
+
+{% block subcontent %}
+<div class="jumbo">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+            <span style="color: red;">{{ message }}</span><br>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2>It's some files!</h2>
+    {% for file in files %}
+        <h2><a href="{{ url_for('admin_file', path=file)}}">{{ file }}</a></h2>
+    {% endfor %}
+</div>
+
+{% endblock %}

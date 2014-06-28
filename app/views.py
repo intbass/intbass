@@ -5,7 +5,9 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from forms import LoginForm, IPForm, UserEditForm
 from hashlib import sha256
 from app import app, db, lm
-from models import Sessions, Users, ROLE_USER, ROLE_ADMIN
+from models import Users, ROLE_USER, ROLE_ADMIN, File
+
+import os
 
 #app = Flask(__name__)      
 
@@ -32,7 +34,30 @@ def admin():
     return render_template('admin.html',
             sessions = sessions,
             users = users)
-        
+
+@app.route('/admin/files', methods=['GET'])
+@login_required
+def admin_files():
+    thefiles = []
+    path = app.config['FILE_PATH']
+
+    for root, dirs, files in os.walk(path):
+        for f in files:
+            thefiles.append(os.path.relpath(os.path.join(root, f), path))
+
+    return render_template('admin/files/index.html',
+                           files=thefiles)
+
+@app.route('/admin/files/<path:path>', methods=['GET', 'POST'])
+@login_required
+def admin_file(path):
+    try:
+        file = File(os.path.join(app.config['FILE_PATH'],path))
+        return render_template('admin/files/file.html', file=file)
+    except:
+        flash('Error opening file ' + os.path.join(app.config['FILE_PATH'],path) )
+        return redirect(url_for('admin_files'))
+
 @app.route('/admin/users', methods=['GET', 'POST'])
 @app.route('/admin/users/', methods=['GET', 'POST'])
 @login_required
@@ -82,7 +107,6 @@ def edituser(id):
                 db.session.commit()
                 flash('Role changed to ' + str(user.role), 'success')
             except:
-                raise
                 flash('Role change error', 'error')
 
         return render_template('admin/users/edit.html',
