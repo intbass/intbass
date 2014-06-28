@@ -18,21 +18,17 @@ def before_request():
 @app.route('/')
 @app.route('/home')
 def home():
-    sessions = Sessions.query.all()
-    return render_template('home.html',
-        sessions = sessions)
+    return render_template('home.html')
 
 @app.route('/admin', methods=['GET', 'POST'])
 @app.route('/admin/', methods=['GET', 'POST'])
 @login_required
 # an @admin_required construct would seem more useful
 def admin():
-    sessions = Sessions.query.all()
     users = Users.query.all()
     #users = Users.query.order_by(Users.name).all()
 
     return render_template('admin.html',
-            sessions = sessions,
             users = users)
 
 @app.route('/admin/files', methods=['GET'])

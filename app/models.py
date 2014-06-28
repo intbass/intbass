@@ -50,6 +50,7 @@ class Roles(db.Model):
 class File:
     def __init__(self, path):
         if not os.access(path, os.R_OK):
+            flash('error reading file %s' % path)
             raise ValueError
         self.filename = path
         self.name = os.path.relpath(path, app.config['FILE_PATH'])
