@@ -1,7 +1,8 @@
 import os
 
 from app import db, app
-from mutagen.easyid3 import EasyID3 as id3
+from mutagen.mp3 import MP3
+from mutagen.id3 import ID3NoHeaderError
 
 ROLE_DISABLED = 0
 ROLE_USER = 1
@@ -55,11 +56,20 @@ class File:
         self.filename = path
         self.name = os.path.relpath(path, app.config['FILE_PATH'])
         self.size = os.stat(path).st_size
-        audioinfo = id3(path)
-        self.title = audioinfo['title']
-        self.date_recorded = audioinfo['date']
-        self.album = audioinfo['album']
-        self.artist = audioinfo['artist']
+        try:
+            audio = MP3(path)
+        except:
+            raise
+        self.bitrate = audio.info.bitrate
+        # getting the id3s not entirely reliable
+        if audio.has_key('TIT2'):
+            self.title = audio['TIT2']
+        if audio.has_key('TDRC'):
+            self.date_recorded = audio['TDRC']
+        if audio.has_key('TALB'):
+            self.album = audio['TALB']
+        if audio.has_key('TPE1'):
+            self.artist = audio['TPE1']
 
     def __repr__(self):
         return '<File %r>' % self.filename

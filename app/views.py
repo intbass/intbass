@@ -20,7 +20,6 @@ def before_request():
 def home():
     return render_template('home.html')
 
-@app.route('/admin', methods=['GET', 'POST'])
 @app.route('/admin/', methods=['GET', 'POST'])
 @login_required
 # an @admin_required construct would seem more useful
@@ -54,7 +53,6 @@ def admin_file(path):
         flash('Error opening file ' + os.path.join(app.config['FILE_PATH'],path) )
         return redirect(url_for('admin_files'))
 
-@app.route('/admin/users', methods=['GET', 'POST'])
 @app.route('/admin/users/', methods=['GET', 'POST'])
 @login_required
 def admin_users():
