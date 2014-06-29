@@ -69,13 +69,13 @@ class File:
         self.bitrate = audio.info.bitrate
         # getting the id3s not entirely reliable
         if audio.has_key('TIT2'):
-            self.title = audio['TIT2']
+            self.title = audio['TIT2'].text[0]
         if audio.has_key('TDRC'):
-            self.date_recorded = audio['TDRC']
+            self.date_recorded = audio['TDRC'].text[0]
         if audio.has_key('TALB'):
-            self.album = audio['TALB']
+            self.album = audio['TALB'].text[0]
         if audio.has_key('TPE1'):
-            self.artist = audio['TPE1']
+            self.artist = audio['TPE1'].text[0]
 
     def __repr__(self):
         return '<File %r>' % self.filename
