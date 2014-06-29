@@ -5,7 +5,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from forms import LoginForm, IPForm, UserEditForm
 from hashlib import sha256
 from app import app, db, lm
-from models import Users, ROLE_USER, ROLE_ADMIN, File
+from models import Users, ROLE_USER, ROLE_ADMIN, File, FileError
 
 import os
 
@@ -46,12 +46,19 @@ def admin_files():
 @app.route('/admin/files/<path:path>', methods=['GET', 'POST'])
 @login_required
 def admin_file(path):
+    shortname = os.path.join(app.config['FILE_PATH'],path)
     try:
-        file = File(os.path.join(app.config['FILE_PATH'],path))
-        return render_template('admin/files/file.html', file=file)
-    except:
-        flash('Error opening file ' + os.path.join(app.config['FILE_PATH'],path) )
+        file = File(shortname)
+    except FileError as e:
+        #flash('Error opening file %s - %s') % (str(shortname), str(e))
+        #flash('Error opening file ' + str(shortname) + ' - ' + str(e.value))
+        flash(e.value)
         return redirect(url_for('admin_files'))
+    #except:
+    #    flash('Error opening file ' + os.path.join(app.config['FILE_PATH'],path) )
+    #    return redirect(url_for('admin_files'))
+
+    return render_template('admin/files/file.html', file=file)
 
 @app.route('/admin/users/', methods=['GET', 'POST'])
 @login_required

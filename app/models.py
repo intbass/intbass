@@ -48,18 +48,24 @@ class Roles(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
 
+class FileError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 class File:
     def __init__(self, path):
         if not os.access(path, os.R_OK):
-            flash('error reading file %s' % path)
-            raise ValueError
+            raise FileError('Could not open file %s' % path)
+
         self.filename = path
         self.name = os.path.relpath(path, app.config['FILE_PATH'])
         self.size = os.stat(path).st_size
         try:
             audio = MP3(path)
         except:
-            raise
+            raise FileError('Could not determine audio info.')
         self.bitrate = audio.info.bitrate
         # getting the id3s not entirely reliable
         if audio.has_key('TIT2'):
