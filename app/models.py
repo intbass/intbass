@@ -57,7 +57,7 @@ class FileError(Exception):
 class File:
     def __init__(self, path):
         if not os.access(path, os.R_OK):
-            raise FileError('Could not open file %s' % path)
+            raise FileError(u'Could not open file {0:s}'.format(path))
 
         self.filename = path
         self.name = os.path.relpath(path, app.config['FILE_PATH'])
@@ -65,10 +65,10 @@ class File:
         try:
             audio = MP3(path)
         except:
-            raise FileError('Could not determine audio info.')
+            raise FileError('Could not open MP3 file.')
         self.bitrate = audio.info.bitrate
         # getting the id3s not entirely reliable
-        if audio.has_key('TIT2'):
+        if 'TIT2' in audio:
             self.title = audio['TIT2'].text[0]
         if audio.has_key('TDRC'):
             self.date_recorded = audio['TDRC'].text[0]

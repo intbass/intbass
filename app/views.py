@@ -36,7 +36,7 @@ def admin_files():
     thefiles = []
     path = app.config['FILE_PATH']
 
-    for root, dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(path, followlinks=True):
         for f in files:
             thefiles.append(os.path.relpath(os.path.join(root, f), path))
 
