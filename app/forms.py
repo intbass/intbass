@@ -12,20 +12,20 @@ from wtforms.validators import Required
 #    submit = SubmitField("Send")
 
 class LoginForm(Form):
-    username = TextField('Name:', validators = [Required()])
-    password = PasswordField('Password:', validators = [Required()])
-    remember_me = BooleanField('remember_me', default = False)
+    username = TextField('Name:', validators=[Required()])
+    password = PasswordField('Password:', validators=[Required()])
+    remember_me = BooleanField('remember_me', default=False)
 
 class UserEditForm(Form):
-    username = TextField('username ', validators = [Required()])
-    email = TextField('emailjapan', validators = [Required()])
-    location = TextField('Location', validators = [Required()])
+    username = TextField('username ', validators=[Required()])
+    email = TextField('emailjapan', validators=[Required()])
+    location = TextField('Location', validators=[Required()])
     password = PasswordField('Password')
-    role = SelectField('Role', validators = [Required()],
-            choices=[('0', 'disabled'),
-            ('1', 'user'),
-            ('2', 'dj'),
-            ('11', 'admin')])
+    #role = SelectField('Role', validators=[Required()],
+    #        choices=[('0', 'disabled'),
+    #            ('1', 'user'),
+    #            ('2', 'dj'),
+    #            ('11', 'admin')])
 
 class FileForm(Form):
     title = TextField('title', validators=[Required()])

@@ -6,7 +6,7 @@ from forms import LoginForm, FileForm, UserEditForm
 from hashlib import sha256
 from app import app, db, lm
 from app.util import admin_required
-from models import Users, ROLE_USER, ROLE_ADMIN, File, FileError
+from models import Users, File, FileError
 
 import os
 
@@ -116,7 +116,7 @@ def edituser(id):
                 user = user)
     else: 
         form = UserEditForm(username = user.name,
-        role = user.role,
+        #role = user.role,
         email = user.email,
         location = user.location)
         return render_template('admin/users/edit.html',

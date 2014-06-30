@@ -14,7 +14,7 @@
       <div class="container">
         <!-- <img src="static/img/ibs_logo.png"> -->
         <h1 class="logo"><a href="{{ url_for('home') }}">International Bass Station</a></h1>
-      {% if g.user.is_authenticated() %}
+          {% if g.user.is_authenticated() %}
         <span class="right">
         Welcome, {{ g.user.name }}!
         {% if g.user.is_admin() %}
