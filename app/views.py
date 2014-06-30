@@ -2,9 +2,10 @@
 
 from flask import render_template, request, flash, session, redirect, g, url_for
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from forms import LoginForm, IPForm, UserEditForm
+from forms import LoginForm, FileForm, UserEditForm
 from hashlib import sha256
 from app import app, db, lm
+from app.util import admin_required
 from models import Users, ROLE_USER, ROLE_ADMIN, File, FileError
 
 import os
@@ -21,8 +22,7 @@ def home():
     return render_template('home.html')
 
 @app.route('/admin/', methods=['GET', 'POST'])
-@login_required
-# an @admin_required construct would seem more useful
+@admin_required
 def admin():
     users = Users.query.all()
     #users = Users.query.order_by(Users.name).all()
@@ -31,7 +31,7 @@ def admin():
             users = users)
 
 @app.route('/admin/files', methods=['GET'])
-@login_required
+@admin_required
 def admin_files():
     thefiles = []
     path = app.config['FILE_PATH']
@@ -44,8 +44,9 @@ def admin_files():
                            files=thefiles)
 
 @app.route('/admin/files/<path:path>', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def admin_file(path):
+    form = FileForm()
     shortname = os.path.join(app.config['FILE_PATH'],path)
     try:
         file = File(shortname)
@@ -61,14 +62,14 @@ def admin_file(path):
     return render_template('admin/files/file.html', file=file)
 
 @app.route('/admin/users/', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def admin_users():
     users = Users.query.all()
     return render_template('admin/users.html',
             users = users)
 
 @app.route('/admin/users/edit/<id>', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def edituser(id):
     user = load_user(id)
     form = UserEditForm()

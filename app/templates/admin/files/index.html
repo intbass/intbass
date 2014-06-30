@@ -11,7 +11,7 @@
     {% endwith %}
 
     <h2>It's some files!</h2>
-    {% for file in files %}
+    {% for file in files | sort %}
         <h2><a href="{{ url_for('admin_file', path=file)}}">{{ file }}</a></h2>
     {% endfor %}
 </div>

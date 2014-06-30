@@ -61,12 +61,13 @@ class File:
 
         self.filename = path
         self.name = os.path.relpath(path, app.config['FILE_PATH'])
-        self.size = os.stat(path).st_size
+        self.size = os.stat(path).st_size / 1024 / 1024
         try:
             audio = MP3(path)
         except:
             raise FileError('Could not open MP3 file.')
-        self.bitrate = audio.info.bitrate
+        self.bitrate = audio.info.bitrate / 1000
+        self.length = audio.info.length / 60
         # getting the id3s not entirely reliable
         if 'TIT2' in audio:
             self.title = audio['TIT2'].text[0]
