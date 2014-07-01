@@ -21,11 +21,6 @@ class UserEditForm(Form):
     email = TextField('emailjapan', validators=[Required()])
     location = TextField('Location', validators=[Required()])
     password = PasswordField('Password')
-    #role = SelectField('Role', validators=[Required()],
-    #        choices=[('0', 'disabled'),
-    #            ('1', 'user'),
-    #            ('2', 'dj'),
-    #            ('11', 'admin')])
 
 class FileForm(Form):
     title = TextField('title', validators=[Required()])
