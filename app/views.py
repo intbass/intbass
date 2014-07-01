@@ -3,7 +3,6 @@
 from flask import render_template, request, flash, session, redirect, g, url_for
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from forms import LoginForm, FileForm, UserEditForm
-from hashlib import sha256
 from app import app, db, lm
 from app.util import admin_required
 from models import Users, File, FileError
@@ -84,7 +83,7 @@ def edituser(id):
                 flash('Username change error', 'error')
         if form.password.data != '':
             try:
-                user.password = sha256(request.form['password']).hexdigest()
+                user.set_password(form.password.data)
                 db.session.commit()
                 flash('Password changed', 'success')
             except:
@@ -135,10 +134,13 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         username = request.form['username']
-        password = sha256(request.form['password']).hexdigest()
-        user = Users.query.filter_by(name=username, password=password).first()
+        password = request.form['password']
+        user = Users.query.filter_by(name=username).first()
         if user is None:
             flash('Username or Password is invalid' , 'error')
+            return redirect(url_for('login'))
+        if not user.authenticate(password):
+            flash('Username or Password is invalid', 'error')
             return redirect(url_for('login'))
         login_user(user)
         session['remember_me'] = form.remember_me.data
