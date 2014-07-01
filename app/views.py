@@ -74,11 +74,11 @@ def edituser(id):
     form = UserEditForm()
     #if form.validate_on_submit():
     if form.is_submitted():
-        if form.username.data != user.name:
+        if form.name.data != user.name:
             try:
-                user.name=form.username.data
+                user.name=form.name.data
                 db.session.commit()
-                flash('Username change from ' + user.name + ' to ' + form.username.data, 'success')
+                flash('Username change from ' + user.name + ' to ' + username.data, 'success')
             except:
                 flash('Username change error', 'error')
         if form.password.data != '':
@@ -107,9 +107,7 @@ def edituser(id):
                 form = form,
                 user = user)
     else: 
-        form = UserEditForm(username = user.name,
-        email = user.email,
-        location = user.location)
+        form = UserEditForm(obj=user)
         return render_template('admin/users/edit.html',
             form = form,
             user = user)

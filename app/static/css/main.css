@@ -96,7 +96,7 @@ form label {
   padding: 10px 0;
 }
  
-form input#username,
+form input#name,
 form input#password,
 form input#email,
 form input#location {

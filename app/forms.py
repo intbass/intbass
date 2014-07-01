@@ -17,10 +17,10 @@ class LoginForm(Form):
     remember_me = BooleanField('remember_me', default=False)
 
 class UserEditForm(Form):
-    username = TextField('username ', validators=[Required()])
-    email = TextField('emailjapan', validators=[Required()])
-    location = TextField('Location', validators=[Required()])
-    password = PasswordField('Password')
+    name = TextField('name ', validators=[Required()])
+    email = TextField('email', validators=[Required()])
+    location = TextField('location', validators=[Required()])
+    password = PasswordField('password')
 
 class FileForm(Form):
     title = TextField('title', validators=[Required()])
