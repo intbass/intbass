@@ -1,4 +1,5 @@
 import os
+import bcrypt
 
 from app import db, app
 from mutagen.mp3 import MP3
@@ -46,6 +47,16 @@ class Users(db.Model):
     # required for flask-login
     def get_id(self):
         return unicode(self.id)
+
+    def set_password(self, password):
+        salt = bcrypt.gensalt()
+        password = password.encode("utf-8")
+        self.password = bcrypt.hashpw(password, salt)
+
+    def authenticate(self, password):
+        submit = password.encode("utf-8")
+        stored = self.password.encode("utf-8")
+        return bcrypt.hashpw(submit, stored) == stored
 
     def __repr__(self):
         return '<User %r>' % self.name
