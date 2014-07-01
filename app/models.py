@@ -5,6 +5,10 @@ from app import db, app
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3NoHeaderError
 
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy import ForeignKey
+
+
 class UserCapabilities(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -99,10 +103,121 @@ class File:
     def __repr__(self):
         return '<File %r>' % self.filename
 
-    #def size_fmt(num):
-    #    for x in ['bytes','KB','MB','GB']:
-    #        if num < 1024.0:
-    #            return "%3.1f%s" % (num, x)
-    #        num /= 1024.0
-    #    return "%3.1f%s" % (num, 'TB')
+class Listener(db.Model):
+    __tablename__ = 'listeners'
+
+    id = db.Column(db.Integer, primary_key=True)
+    # Icecast Identity
+    iid = db.Column(db.String)
+    address = db.Column(db.String)
+    agent = db.Column(db.String)
+    connected = db.Column(db.Integer)
+    last = db.Column(db.DateTime)
+    lat = db.Column(db.Float)
+    long = db.Column(db.Float)
+    city = db.Column(db.String)
+    region = db.Column(db.String)
+    country = db.Column(db.String)
+    mountid = db.Column(db.Integer, ForeignKey('mounts.id'))
+    mount = relationship("Mount", backref=backref('listeners', order_by=id))
+
+    def __init__(self, mount, iid, ip, ua, connected):
+        self.mountid = mount.id
+        self.iid = iid
+        self.address = ip
+        self.agent = ua
+        self.connected = connected
+        gir = gi.record_by_addr(ip)
+        if gir != None:
+            self.lat = gir['latitude']
+            self.long = gir['longitude']
+            self.city = gir['city']
+            self.region = gir['region_name']
+            self.country = gir['country_name']
+
+    def __repr__(self):
+        return "<Listener('%s')>" % self.iid
+
+class Station(db.Model):
+    __tablename__ = 'stations'
+    id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String, unique=True)
+    live = db.Column(db.Boolean)
+    name = db.Column(db.String)
+    artist = db.Column(db.String)
+    playing = db.Column(db.String)
+
+    def __init__(self, tag, name, playing, artist, live):
+        self.tag = tag
+        self.name = name
+        self.live = live
+        self.artist = artist
+        self.playing = playing
+
+    def __repr__(self):
+        return "<Station('%s')>" % self.tag
+
+class Mount(db.Model):
+    __tablename__ = 'mounts'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    info = db.Column(db.String)
+    genre = db.Column(db.String)
+    count = db.Column(db.String)
+    peak = db.Column(db.String)
+    url = db.Column(db.String)
+    max = db.Column(db.String)
+    public = db.Column(db.String)
+    slow = db.Column(db.String)
+    source = db.Column(db.String)
+    start = db.Column(db.String)
+    title = db.Column(db.String)
+    bytesread = db.Column(db.Integer)
+    bytessent = db.Column(db.Integer)
+    useragent = db.Column(db.String)
+
+    serverid = db.Column(db.Integer, ForeignKey('servers.id'))
+    server = relationship("Server", backref=backref('mounts', order_by=id))
+    stationid = db.Column(db.Integer, ForeignKey('stations.id'))
+    station = relationship("Station", backref=backref('mounts', order_by=id))
+
+    def __init__(self, server, info, genre, count, peak, url, max, public, slow, source, start, title, bytesread, bytessent, useragent):
+        self.serverid = server.id
+        self.info = info
+        self.genre = genre
+        self.count = count
+        self.peak = peak
+        self.url = url
+        self.max = max
+        self.public = public
+        self.slow = slow
+        self.source = source
+        self.start = start
+        self.title = title
+        self.bytesread = bytesread
+        self.bytessent = bytessent
+        self.useragent = useragent
+
+    def __repr__(self):
+        return "<Mount(%s:%d)>" % (self.url, self.serverid)
+
+class Server(db.Model):
+    __tablename__ = 'servers'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    host = db.Column(db.String)
+    port = db.Column(db.Integer)
+    user = db.Column(db.String)
+    word = db.Column(db.String)
+
+    def __init__(self, name, host, port, user, word):
+        self.name = name
+        self.host = host
+        self.port = port
+        self.user = user
+        self.word = word
+
+    def __repr__(self):
+        return "<Server('%s')>" % (self.name)
 
