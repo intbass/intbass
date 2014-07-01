@@ -19,7 +19,6 @@ class Users(db.Model):
     name = db.Column(db.String(64), unique = True)
     pic = db.Column(db.String(250))
     email = db.Column(db.String(120), unique = True)
-    #role = db.Column(db.SmallInteger, default = ROLE_USER)
     location = db.Column(db.String(64))
     password = db.Column(db.String(64))
     capabilities = db.relationship('UserCapabilities', backref='user', lazy='dynamic')
