@@ -5,8 +5,15 @@ from config import SQLALCHEMY_MIGRATE_REPO
 from app import db
 from app.models import Users
 import os.path
+import sys
 from getpass import getpass
 from gettext import gettext as _
+
+affirmative = ['y', 'yes']
+
+
+def colon(prompt):
+    return '{}: '.format(prompt)
 
 
 def input(prompt):
@@ -18,17 +25,22 @@ def input(prompt):
 
     value = ''
     while value == '':
-        value = input('{}: '.format(prompt))
+        value = input(prompt)
     return value
 
 
-name = input(_('Admin username'))
-email = input(_('Admin email address'))
+name = input(colon(_('Admin username')))
+email = input(colon(_('Admin email address')))
 password = ''
 confirm = 'no'
 while password != confirm:
-    password = getpass(prompt='{}: '.format(_('Admin password')))
-    confirm = getpass(prompt='{}: '.format(_('Confirm admin password')))
+    password = getpass(prompt=colon(_('Admin password')))
+    confirm = getpass(prompt=colon(_('Confirm admin password')))
+
+confirm = input('{} ({})? '.format(_('Continue'), '/'.join(affirmative))).lower()
+if confirm not in affirmative:
+    print _('Exiting')
+    sys.exit()
 
 db.create_all()
 if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
@@ -40,3 +52,4 @@ admin = Users(name=name, location=_('Earth'), email=email)
 admin.set_password(password)
 db.session.add(admin)
 db.session.commit()
+print _('Complete')
