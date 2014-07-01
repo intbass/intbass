@@ -102,13 +102,13 @@ def edituser(id):
                 flash('Location changed to ' + user.location, 'success')
             except:
                 flash('Location change error', 'error')
-        if int(form.role.data) != user.role:
-            try:
-                user.role = int(form.role.data)
-                db.session.commit()
-                flash('Role changed to ' + str(user.role), 'success')
-            except:
-                flash('Role change error', 'error')
+        #if int(form.role.data) != user.role:
+        #    try:
+        #        user.role = int(form.role.data)
+        #        db.session.commit()
+        #        flash('Role changed to ' + str(user.role), 'success')
+        #    except:
+        #        flash('Role change error', 'error')
 
         return render_template('admin/users/edit.html',
                 form = form,
