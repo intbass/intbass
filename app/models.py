@@ -90,7 +90,7 @@ class File:
         if 'TIT2' in audio:
             self.title = audio['TIT2'].text[0]
         if audio.has_key('TDRC'):
-            self.date_recorded = audio['TDRC'].text[0]
+            self.date_recorded = audio['TDRC'].text[0].text
         if audio.has_key('TALB'):
             self.album = audio['TALB'].text[0]
         if audio.has_key('TPE1'):
