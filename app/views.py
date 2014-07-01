@@ -45,7 +45,6 @@ def admin_files():
 @app.route('/admin/files/<path:path>', methods=['GET', 'POST'])
 @admin_required
 def admin_file(path):
-    form = FileForm()
     shortname = os.path.join(app.config['FILE_PATH'],path)
     try:
         file = File(shortname)
@@ -58,7 +57,8 @@ def admin_file(path):
     #    flash('Error opening file ' + os.path.join(app.config['FILE_PATH'],path) )
     #    return redirect(url_for('admin_files'))
 
-    return render_template('admin/files/file.html', file=file)
+    form = FileForm(obj=file)
+    return render_template('admin/files/file.html', file=file, form=form)
 
 @app.route('/admin/users/', methods=['GET', 'POST'])
 @admin_required
@@ -102,20 +102,12 @@ def edituser(id):
                 flash('Location changed to ' + user.location, 'success')
             except:
                 flash('Location change error', 'error')
-        if int(form.role.data) != user.role:
-            try:
-                user.role = int(form.role.data)
-                db.session.commit()
-                flash('Role changed to ' + str(user.role), 'success')
-            except:
-                flash('Role change error', 'error')
 
         return render_template('admin/users/edit.html',
                 form = form,
                 user = user)
     else: 
         form = UserEditForm(username = user.name,
-        #role = user.role,
         email = user.email,
         location = user.location)
         return render_template('admin/users/edit.html',
