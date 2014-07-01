@@ -4,6 +4,7 @@ import bcrypt
 from app import db, app
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3NoHeaderError
+from sqlalchemy.orm import validates
 
 class UserCapabilities(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,10 +49,12 @@ class Users(db.Model):
     def get_id(self):
         return unicode(self.id)
 
-    def set_password(self, password):
+    @validates('password')
+    def set_password(self, key, password):
+        assert password != ''
         salt = bcrypt.gensalt()
         password = password.encode("utf-8")
-        self.password = bcrypt.hashpw(password, salt)
+        return bcrypt.hashpw(password, salt)
 
     def authenticate(self, password):
         submit = password.encode("utf-8")

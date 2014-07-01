@@ -33,10 +33,12 @@ password = ''
 confirm = 'no'
 while password != confirm:
     password = getpass(prompt=colon(_('Admin password')))
+    if password == '':
+        continue
     confirm = getpass(prompt=colon(_('Confirm admin password')))
 
-confirm = input('{} ({})? '.format(_('Continue'), '/'.join(affirmative))).lower()
-if confirm not in affirmative:
+confirm = input('{} ({})? '.format(_('Continue'), '/'.join(affirmative)))
+if confirm.lower() not in affirmative:
     print _('Exiting')
     sys.exit()
 
@@ -48,8 +50,7 @@ if not os.path.exists(db_repo):
     api.version_control(db_uri, db_repo)
 else:
     api.version_control(db_uri, db_repo, api.version(db_repo))
-admin = Users(name=name, location=_('Earth'), email=email)
-admin.set_password(password)
-db.session.add(admin)
+db.session.add(Users(name=name, location=_('Earth'),
+                     email=email, password=password))
 db.session.commit()
 print _('Complete')
