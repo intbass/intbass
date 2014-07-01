@@ -2,6 +2,8 @@ tmp
 *.swp
 # configuration file
 config.py
+# local data
+local/
 # virtual env names
 flask
 # Development sqlite
