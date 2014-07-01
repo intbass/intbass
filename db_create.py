@@ -6,6 +6,7 @@ from app import db
 from app.models import Users
 import os.path
 from getpass import getpass
+from gettext import gettext as _
 
 
 def input(prompt):
@@ -21,13 +22,13 @@ def input(prompt):
     return value
 
 
-name = input('Admin username')
-email = input('Admin email address')
+name = input(_('Admin username'))
+email = input(_('Admin email address'))
 password = ''
 confirm = 'no'
 while password != confirm:
-    password = getpass(prompt='Admin password: ')
-    confirm = getpass(prompt='Confirm admin password: ')
+    password = getpass(prompt='{}: '.format(_('Admin password')))
+    confirm = getpass(prompt='{}: '.format(_('Confirm admin password')))
 
 db.create_all()
 if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
@@ -35,7 +36,7 @@ if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
     api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
 else:
     api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, api.version(SQLALCHEMY_MIGRATE_REPO))
-admin = Users(name=name, location='Earth', email=email)
+admin = Users(name=name, location=_('Earth'), email=email)
 admin.set_password(password)
 db.session.add(admin)
 db.session.commit()
