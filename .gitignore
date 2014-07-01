@@ -2,6 +2,8 @@ tmp
 *.swp
 # configuration file
 config.py
+# local data
+local/
 # virtual env names
 flask
 # Development sqlite
@@ -29,6 +31,8 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+# virtual env local
+bin/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template 

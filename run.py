@@ -1,3 +1,4 @@
 #!bin/python
 from app import app
-app.run(debug = True, host='0.0.0.0')
+app.config.from_envvar("INTBASS_SETTINGS", silent=True)
+app.run(host=app.config['HOST'])
