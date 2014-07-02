@@ -1,6 +1,7 @@
 from nose.tools import eq_, raises
 import unittest
 from app import validate
+import bcrypt
 
 
 class TestEmail(unittest.TestCase):
@@ -39,3 +40,26 @@ class TestEmail(unittest.TestCase):
 #    @raises(AssertionError)
     def test_invaliddomain(self):
         validate.email('example@a')
+
+
+class TestUsername(unittest.TestCase):
+    def test_valid(self):
+        eq_(validate.username('perfect'), 'perfect')
+
+    @raises(AssertionError)
+    def test_blank(self):
+        validate.username('')
+
+    @raises(AssertionError)
+    def test_tooshort(self):
+        validate.username('ex')
+
+
+class TestPassword(unittest.TestCase):
+    def test_valid(self):
+        password = validate.password('perfect')
+        assert bcrypt.hashpw('perfect', password) == password
+
+    @raises(AssertionError)
+    def test_blank(self):
+        validate.password('')
