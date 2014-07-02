@@ -2,7 +2,7 @@
 from migrate.versioning import api
 from app import app, db, validate
 from app.validate import ValidationError
-from app.models import Users
+from app.models import Users, UserCapabilities
 import os.path
 import sys
 from getpass import getpass
@@ -78,5 +78,8 @@ else:
     api.version_control(db_uri, db_repo, api.version(db_repo))
 db.session.add(Users(name=name, location=_('Earth'),
                      email=email, password=password))
+db.session.commit()
+u = Users.query.filter_by(name=name).first()
+db.session.add(UserCapabilities(userid=u.id, capability='admin'))
 db.session.commit()
 print _('Complete')
