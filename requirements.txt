@@ -17,3 +17,5 @@ six==1.7.2
 sqlalchemy-migrate==0.9.1
 wsgiref==0.1.2
 bcrypt==1.0.2
+validate_email==1.2
+pydns==2.3.6

@@ -1,6 +1,6 @@
 #!bin/python
 from migrate.versioning import api
-from app import app, db
+from app import app, db, validate
 from app.models import Users
 import os.path
 import sys
@@ -12,6 +12,12 @@ affirmative = ['y', 'yes']
 
 def colon(prompt):
     return '{}: '.format(prompt)
+
+
+def question(prompt, options=None):
+    if options is not None:
+        options = ' ({})'.format('/'.join(options))
+    return '{}{}? '.format(_('Continue'), options)
 
 
 def input(prompt):
@@ -27,16 +33,36 @@ def input(prompt):
     return value
 
 
-name = input(colon(_('Admin username')))
-email = input(colon(_('Admin email address')))
+while True:
+    name = input(colon(_('Admin username')))
+    try:
+        validate.username(name)
+    except AssertionError as args:
+        print _('Invalid username')
+        continue
+    break
+
+while True:
+    email = input(colon(_('Admin email address')))
+    try:
+        validate.email(email)
+    except AssertionError as args:
+        print _('Invalid email address')
+        continue
+    break
+
 password = ''
 confirm = 'no'
 while password != confirm:
     password = getpass(prompt=colon(_('Admin password')))
+    try:
+        validate.password(password)
+    except AssertionError:
+        continue
     confirm = getpass(prompt=colon(_('Confirm admin password')))
 
-confirm = input('{} ({})? '.format(_('Continue'), '/'.join(affirmative))).lower()
-if confirm not in affirmative:
+confirm = input(question(_('Continue'), affirmative))
+if confirm.lower() not in affirmative:
     print _('Exiting')
     sys.exit()
 
@@ -48,8 +74,7 @@ if not os.path.exists(db_repo):
     api.version_control(db_uri, db_repo)
 else:
     api.version_control(db_uri, db_repo, api.version(db_repo))
-admin = Users(name=name, location=_('Earth'), email=email)
-admin.set_password(password)
-db.session.add(admin)
+db.session.add(Users(name=name, location=_('Earth'),
+                     email=email, password=password))
 db.session.commit()
 print _('Complete')

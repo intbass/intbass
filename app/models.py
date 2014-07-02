@@ -1,9 +1,10 @@
 import os
 import bcrypt
 
-from app import db, app
+from app import app, db, validate
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3NoHeaderError
+from sqlalchemy.orm import validates
 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import ForeignKey
@@ -51,10 +52,17 @@ class Users(db.Model):
     def get_id(self):
         return unicode(self.id)
 
-    def set_password(self, password):
-        salt = bcrypt.gensalt()
-        password = password.encode("utf-8")
-        self.password = bcrypt.hashpw(password, salt)
+    @validates('name')
+    def set_name(self, key, name):
+        return validate.username(name)
+
+    @validates('password')
+    def set_password(self, key, password):
+        return validate.password(password)
+
+    @validates('email')
+    def set_email(self, key, email):
+        return validate.email(email)
 
     def authenticate(self, password):
         submit = password.encode("utf-8")
