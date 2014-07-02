@@ -20,14 +20,10 @@ def before_request():
 def home():
     return render_template('home.html')
 
-@app.route('/admin/', methods=['GET', 'POST'])
+@app.route('/admin/', methods=['GET'])
 @admin_required
 def admin():
-    users = Users.query.all()
-    #users = Users.query.order_by(Users.name).all()
-
-    return render_template('admin.html',
-            users = users)
+    return render_template('admin.html')
 
 @app.route('/admin/files', methods=['GET'])
 @admin_required
@@ -93,6 +89,8 @@ def edituser(id):
                 user.email = form.email.data
                 db.session.commit()
                 flash('Email changed to ' + user.email, 'success')
+            except AssertionError:
+                flash('Invalid email address', 'error')
             except:
                 flash('Email change error', 'error')
         if form.location.data != user.location:
