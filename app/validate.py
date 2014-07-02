@@ -25,6 +25,8 @@ def email(email):
     """
     assert validate_email(email, verify=app.config['VERIFY_EMAIL_ADDRESSES'])
     email = email.rsplit('@', 2)
+    assert len(email[1]) > 3
+    assert '.' in email[1]
     email = '@'.join([email[0], email[1].lower()])
     return email
 

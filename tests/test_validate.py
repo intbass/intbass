@@ -37,9 +37,17 @@ class TestEmail(unittest.TestCase):
     def test_nodomain(self):
         validate.email('example@')
 
-#    @raises(AssertionError)
-    def test_invaliddomain(self):
+    @raises(AssertionError)
+    def test_domainallwrong(self):
         validate.email('example@a')
+
+    @raises(AssertionError)
+    def test_invaliddomain(self):
+        validate.email('example@a.a')
+
+    @raises(AssertionError)
+    def test_domainnodot(self):
+        validate.email('example@aaaaaaaaaaa')
 
 
 class TestUsername(unittest.TestCase):
