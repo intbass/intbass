@@ -1,5 +1,5 @@
 # International Bass Station Flask App 
-[![Build Status][build-status-badge]] [build-status]
+[![Build Status](https://travis-ci.org/beats-to/intbass.svg?branch=master)](https://travis-ci.org/beats-to/intbass)
 
 ## Contributing
 
