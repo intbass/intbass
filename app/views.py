@@ -74,12 +74,12 @@ def edituser(id):
             try:
                 user.name=form.name.data
                 db.session.commit()
-                flash('Username change from ' + user.name + ' to ' + username.data, 'success')
+                flash('Username change from ' + user.name + ' to ' + form.name.data, 'success')
             except:
                 flash('Username change error', 'error')
         if form.password.data != '':
             try:
-                user.set_password(form.password.data)
+                user.password = form.password.data
                 db.session.commit()
                 flash('Password changed', 'success')
             except:
