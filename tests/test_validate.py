@@ -25,27 +25,27 @@ class TestEmail(unittest.TestCase):
         eq_(validate.email('example@c.je'),
             'example@c.je')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_invalid(self):
         validate.email('example')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_nolocalpart(self):
         validate.email('@example.com')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_nodomain(self):
         validate.email('example@')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_domainallwrong(self):
         validate.email('example@a')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_invaliddomain(self):
         validate.email('example@a.a')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_domainnodot(self):
         validate.email('example@aaaaaaaaaaa')
 
@@ -54,11 +54,11 @@ class TestUsername(unittest.TestCase):
     def test_valid(self):
         eq_(validate.username('perfect'), 'perfect')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_blank(self):
         validate.username('')
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_tooshort(self):
         validate.username('ex')
 
@@ -68,6 +68,6 @@ class TestPassword(unittest.TestCase):
         password = validate.password('perfect')
         assert bcrypt.hashpw('perfect', password) == password
 
-    @raises(AssertionError)
+    @raises(validate.ValidationError)
     def test_blank(self):
         validate.password('')
