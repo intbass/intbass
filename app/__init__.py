@@ -2,7 +2,7 @@ from flask import Flask
 from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask('intbass')
 app.config.from_object('config')
 app.config.from_envvar("INTBASS_SETTINGS", silent=True)
 db = SQLAlchemy(app)
