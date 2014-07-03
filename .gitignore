@@ -8,6 +8,8 @@ local/
 flask
 # Development sqlite
 app.db
+# Test suite sqlite
+test.db
 # PYTHON
 # Byte-compiled / optimized / DLL files
 __pycache__/
