@@ -14,24 +14,29 @@
       <div class="container">
         <!-- <img src="static/img/ibs_logo.png"> -->
         <h1 class="logo"><a href="{{ url_for('home') }}">International Bass Station</a></h1>
+        <span class="right">
           {% if g.user.is_authenticated() %}
-        <span class="right">
-        Welcome, {{ g.user.name }}!
-        {% if g.user.is_admin() %}
-          <a href="{{ url_for('admin') }}">Admin</a> | 
-        {% endif %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        </span>
-      {% else %}
-        <span class="right">
+            Welcome, {{ g.user.name }}!
+            {% if g.user.is_admin() %}
+              <a href="{{ url_for('admin') }}">Admin</a> |
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+          {% else %}
             <a href="{{ url_for('login') }}">Sign In</a>
+          {% endif %}
         </span>
-      {% endif %}
     </div>
 
     </header> 
      
     <div class="container">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+            <span style="color: red;">{{ message }}</span><br>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
     {% block content %}
     {% endblock %}
     </div>
