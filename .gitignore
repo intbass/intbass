@@ -8,6 +8,8 @@ local/
 flask
 # Development sqlite
 app.db
+# Test suite sqlite
+test.db
 # PYTHON
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -34,6 +36,7 @@ share/
 *.egg
 # virtual env local
 bin/
+man/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template 

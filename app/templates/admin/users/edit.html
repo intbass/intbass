@@ -5,14 +5,6 @@
     <h2>Manage User {{ user.name }}</h2>
     <form action="" method="post" name="login">
     {{form.hidden_tag()}}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-            <span style="color: red;">{{ message }}</span><br>
-        {% endfor %}
-        {% endif %}
-    {% endwith %}
-
     {% with errors = form.errors %}
         {% if errors %}
 	        {% for error in errors %}

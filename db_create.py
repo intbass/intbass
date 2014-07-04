@@ -1,7 +1,8 @@
 #!bin/python
 from migrate.versioning import api
 from app import app, db, validate
-from app.models import Users
+from app.validate import ValidationError
+from app.models import Users, UserCapabilities
 import os.path
 import sys
 from getpass import getpass
@@ -37,8 +38,8 @@ while True:
     name = input(colon(_('Admin username')))
     try:
         validate.username(name)
-    except AssertionError as args:
-        print _('Invalid username')
+    except ValidationError as error:
+        print error 
         continue
     break
 
@@ -46,8 +47,8 @@ while True:
     email = input(colon(_('Admin email address')))
     try:
         validate.email(email)
-    except AssertionError as args:
-        print _('Invalid email address')
+    except ValidationError as error:
+        print error
         continue
     break
 
@@ -57,7 +58,8 @@ while password != confirm:
     password = getpass(prompt=colon(_('Admin password')))
     try:
         validate.password(password)
-    except AssertionError:
+    except ValidationError as error:
+        print error
         continue
     confirm = getpass(prompt=colon(_('Confirm admin password')))
 
@@ -76,5 +78,8 @@ else:
     api.version_control(db_uri, db_repo, api.version(db_repo))
 db.session.add(Users(name=name, location=_('Earth'),
                      email=email, password=password))
+db.session.commit()
+u = Users.query.filter_by(name=name).first()
+db.session.add(UserCapabilities(userid=u.id, capability='admin'))
 db.session.commit()
 print _('Complete')
