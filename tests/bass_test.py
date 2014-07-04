@@ -13,8 +13,7 @@ class BassTestCase(unittest.TestCase):
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['CSRF_ENABLED'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'test.db')
-        import pprint; pprint.pprint(app.config)
-        app.root_path += '/app'
+#        app.root_path += '/app'
         self.app = app.test_client()
         db.create_all()
 
