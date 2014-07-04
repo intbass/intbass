@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="jumbo">
-    <h2>Recent Sessions</h2>
-    <!-- <h2>International bass station</h2>
-    <h3>This is the home page for the Flask app<h3> -->
-    {% for session in sessions %}
-        <div class="session">
-            <hr>
-            <h2>{{ session.name }}</h2>
-            <h3>{{ session.date }}</h3>
-            <audio src="http://intlbass.com/static/music/{{ session.filename }}" controls preload="auto"></audio>
-        </div>
-    {% endfor %}
+    <h2>Recent Events</h2>
   </div>
 {% endblock %}
