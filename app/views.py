@@ -8,6 +8,9 @@ from app.util import admin_required
 from models import Users, File, FileError
 
 import os
+import json
+from hashlib import sha256
+
 
 #app = Flask(__name__)      
 
@@ -142,9 +145,29 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
+    flash('You have been successfully logged out')
     return redirect('/home')
 
 
- 
+@app.route('/build/ci/travis', methods=['POST'])
+def build_travis():
+    if 'TRAVIS_TOKEN' not in app.config or \
+       'GITHUB_REPO' not in app.config:
+        raise BaseException('Travis-CI API options are not set')
+    sha = app.config['GITHUB_REPO'] + app.config['TRAVIS_TOKEN']
+    if sha256(sha).hexdigest() != request.headers.get('Authorization'):
+        raise BaseException('Auth error')
+    payload = json.loads(request.args.get('payload'))
+    paylog = open('/tmp/payload', 'a')
+    paylog.write(json.dumps(payload))
+    paylog.close()
+    return payload.status
+
+
+@app.route('/build/gadget.xml')
+def build_gadget():
+    return render_template('buildgadget.xml', hostname=app.config['HOSTNAME'])
+
+
 if __name__ == '__main__':
     app.run(debug=True)

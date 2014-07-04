@@ -8,12 +8,19 @@ from sqlalchemy.orm import validates
 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import ForeignKey
+from flask_login import AnonymousUserMixin
 
 
 class UserCapabilities(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, db.ForeignKey('users.id'))
     capability = db.Column(db.String(12))
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def has_capability(self, capability):
+        return False
+
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -227,4 +234,12 @@ class Server(db.Model):
 
     def __repr__(self):
         return "<Server('%s')>" % (self.name)
+
+class Comments:
+    __tablename__ = 'comments' 
+    id = db.Column(db.Integer, primary_key=True)
+    author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    content = db.Column(db.Text(1024))
+    file = db.Column(db.String)
+ 
 
