@@ -33,7 +33,8 @@ def admin_files():
 
     for root, dirs, files in os.walk(path, followlinks=True):
         for f in files:
-            thefiles.append(os.path.relpath(os.path.join(root, f), path))
+            if f.endswith('.mp3'):
+                thefiles.append(os.path.relpath(os.path.join(root, f), path))
 
     return render_template('admin/files/index.html',
                            files=thefiles)
