@@ -9,4 +9,4 @@ script: nosetests
 notifications:
   webhooks:
     urls:
-      - http://intbass.com/travis
+      - http://intbass.com/build/ci/travis
