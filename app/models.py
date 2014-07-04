@@ -228,3 +228,11 @@ class Server(db.Model):
     def __repr__(self):
         return "<Server('%s')>" % (self.name)
 
+class Comments:
+    __tablename__ = 'comments' 
+    id = db.Column(db.Integer, primary_key=True)
+    author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    content = db.Column(db.Text(1024))
+    file = db.Column(db.String)
+ 
+
