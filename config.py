@@ -9,4 +9,4 @@ DEBUG = True
 CSRF_ENABLED = True
 SECRET_KEY = 'My Super Secret key'
 FILE_PATH = os.path.join(basedir, 'local/Music')
-HOST = '0.0.0.0'
+HOST = '::'
