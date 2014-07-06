@@ -157,7 +157,7 @@ def build_travis():
     sha = app.config['GITHUB_REPO'] + app.config['TRAVIS_TOKEN']
     if sha256(sha).hexdigest() != request.headers.get('Authorization'):
         raise BaseException('Auth error')
-    payload = json.loads(request.args.get('payload'))
+    payload = json.loads(request.form['payload'])
     paylog = open('/tmp/payload', 'a')
     paylog.write(json.dumps(payload))
     paylog.close()
