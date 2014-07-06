@@ -161,12 +161,7 @@ def build_travis():
     paylog = open('/tmp/payload', 'a')
     paylog.write(json.dumps(payload))
     paylog.close()
-    return payload['status']
-
-
-@app.route('/build/gadget.xml')
-def build_gadget():
-    return render_template('buildgadget.xml', hostname=app.config['HOSTNAME'])
+    return '{status} {result} {result_message}'.format(**payload)
 
 
 if __name__ == '__main__':
