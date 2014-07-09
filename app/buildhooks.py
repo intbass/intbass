@@ -1,19 +1,20 @@
 from flask import abort, Blueprint, request, Response
 import json
 from hashlib import sha256
-from logging import info, warn, error, critical
 
 
 class BuildHooksBlueprint(Blueprint):
     def register(self, app, options, first_registration=False):
         global auth
         self.app = app
+        self.logger = app.logger
 
         super(BuildHooksBlueprint,
               self).register(app, options, first_registration)
 
     def config(self, key):
         return self.app.config.get(key)
+
 
 buildhooks = app = BuildHooksBlueprint('buildhooks', __name__)
 
