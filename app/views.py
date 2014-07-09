@@ -149,20 +149,5 @@ def logout():
     return redirect('/home')
 
 
-@app.route('/build/ci/travis', methods=['POST'])
-def build_travis():
-    if 'TRAVIS_TOKEN' not in app.config or \
-       'GITHUB_REPO' not in app.config:
-        raise BaseException('Travis-CI API options are not set')
-    sha = app.config['GITHUB_REPO'] + app.config['TRAVIS_TOKEN']
-    if sha256(sha).hexdigest() != request.headers.get('Authorization'):
-        raise BaseException('Auth error')
-    payload = json.loads(request.form['payload'])
-    paylog = open('/tmp/payload', 'a')
-    paylog.write(json.dumps(payload))
-    paylog.close()
-    return '{status} {result} {result_message}'.format(**payload)
-
-
 if __name__ == '__main__':
     app.run(debug=True)
