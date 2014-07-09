@@ -1,6 +1,6 @@
 #!flask/bin/python 
 
-from flask import render_template, request, flash, session, redirect, g, url_for
+from flask import render_template, request, Response, flash, session, redirect, g, url_for
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from forms import LoginForm, FileForm, UserEditForm
 from app import app, db, lm
@@ -8,11 +8,12 @@ from app.util import admin_required
 from models import Users, File, FileError
 
 import os
-import json
-from hashlib import sha256
 
 
-#app = Flask(__name__)      
+@app.errorhandler(401)
+def forbidden(error='Unauthorized'):
+    return Response(error, 401, {'WWW-Authenticate': 'None'})
+
 
 @app.before_request
 def before_request():
