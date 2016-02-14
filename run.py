@@ -1,3 +1,6 @@
-#!bin/python
+import logging
 from app import app
-app.run(host=app.config['HOST'])
+
+if __name__ == '__main__':
+    logging.basicConfig()
+    app.run(debug=True)

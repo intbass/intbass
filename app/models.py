@@ -23,13 +23,14 @@ class AnonymousUser(AnonymousUserMixin):
 
 
 class Users(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(64), unique = True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
     pic = db.Column(db.String(250))
-    email = db.Column(db.String(120), unique = True)
+    email = db.Column(db.String(120), unique=True)
     location = db.Column(db.String(64))
     password = db.Column(db.String(64))
-    capabilities = db.relationship('UserCapabilities', backref='user', lazy='dynamic')
+    capabilities = db.relationship('UserCapabilities',
+                                   backref='user', lazy='dynamic')
 
     def has_capability(self, capability):
         for c in self.capabilities:
@@ -47,7 +48,7 @@ class Users(db.Model):
 
     # required for flask-login
     def is_active(self):
-        #if self.role > 0:
+        # if self.role > 0:
         #    return True
         return True
 
@@ -79,7 +80,7 @@ class Users(db.Model):
     def __repr__(self):
         return '<User %r>' % self.name
 
-#class Roles(db.Model):
+# class Roles(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
 #    name = db.Column(db.String(64), unique=True)
 
@@ -87,8 +88,10 @@ class Users(db.Model):
 class FileError(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
+
 
 class File:
     def __init__(self, path):
@@ -107,15 +110,16 @@ class File:
         # getting the id3s not entirely reliable
         if 'TIT2' in audio:
             self.title = audio['TIT2'].text[0]
-        if audio.has_key('TDRC'):
+        if 'TDRC' in audio:
             self.date_recorded = audio['TDRC'].text[0].text
-        if audio.has_key('TALB'):
+        if 'TALB' in audio:
             self.album = audio['TALB'].text[0]
-        if audio.has_key('TPE1'):
+        if 'TPE1' in audio:
             self.artist = audio['TPE1'].text[0]
 
     def __repr__(self):
         return '<File %r>' % self.filename
+
 
 class Listener(db.Model):
     __tablename__ = 'listeners'
@@ -142,7 +146,7 @@ class Listener(db.Model):
         self.agent = ua
         self.connected = connected
         gir = gi.record_by_addr(ip)
-        if gir != None:
+        if gir is not None:
             self.lat = gir['latitude']
             self.long = gir['longitude']
             self.city = gir['city']
@@ -151,6 +155,7 @@ class Listener(db.Model):
 
     def __repr__(self):
         return "<Listener('%s')>" % self.iid
+
 
 class Station(db.Model):
     __tablename__ = 'stations'
@@ -170,6 +175,7 @@ class Station(db.Model):
 
     def __repr__(self):
         return "<Station('%s')>" % self.tag
+
 
 class Mount(db.Model):
     __tablename__ = 'mounts'
@@ -196,7 +202,8 @@ class Mount(db.Model):
     stationid = db.Column(db.Integer, ForeignKey('stations.id'))
     station = relationship("Station", backref=backref('mounts', order_by=id))
 
-    def __init__(self, server, info, genre, count, peak, url, max, public, slow, source, start, title, bytesread, bytessent, useragent):
+    def __init__(self, server, info, genre, count, peak, url, max, public,
+                 slow, source, start, title, bytesread, bytessent, useragent):
         self.serverid = server.id
         self.info = info
         self.genre = genre
@@ -215,6 +222,7 @@ class Mount(db.Model):
 
     def __repr__(self):
         return "<Mount(%s:%d)>" % (self.url, self.serverid)
+
 
 class Server(db.Model):
     __tablename__ = 'servers'
@@ -235,11 +243,10 @@ class Server(db.Model):
     def __repr__(self):
         return "<Server('%s')>" % (self.name)
 
+
 class Comments:
-    __tablename__ = 'comments' 
+    __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.Integer, db.ForeignKey('users.id'))
     content = db.Column(db.Text(1024))
     file = db.Column(db.String)
- 
-

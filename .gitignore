@@ -32,6 +32,7 @@ share/
 *.egg-info/
 .installed.cfg
 *.egg
+venv/
 # virtual env local
 bin/
 man/

@@ -39,7 +39,7 @@ while True:
     try:
         validate.username(name)
     except ValidationError as error:
-        print error 
+        print error
         continue
     break
 
