@@ -11,7 +11,7 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy import ForeignKey
 
 
-gi = GeoIP.open("/usr/local/share/GeoIP/GeoIPCity.dat",GeoIP.GEOIP_STANDARD)
+gi = GeoIP.open("/usr/share/GeoIP/GeoLiteCity.dat",GeoIP.GEOIP_STANDARD)
 class ExportDict():
     def dict(self):
         d = {}
