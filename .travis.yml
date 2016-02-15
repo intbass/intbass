@@ -15,11 +15,6 @@ before_install:
   - make check  #     (Used to have some errors, but not in 1.6.2)
   - sudo make install
 
-  # get the GeoIP database needed for the tests
-  - wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz 
-  - gunzip GeoLiteCity.dat.gz 
-  - sudo mkdir -p /usr/share/GeoIP
-  - sudo mv GeoLiteCity.dat /usr/share/GeoIP/GeoLiteCity.dat
   - cd ..
   - rm -rf GeoIP-1.6.9
 
