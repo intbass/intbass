@@ -5,6 +5,21 @@ python:
 install: "pip install -r requirements-dev.txt"
 # command to run tests
 script: nosetests -v
+before_install:
+  # get the C part of the GeoIP API
+  - wget https://github.com/maxmind/geoip-api-c/releases/download/v1.6.9/GeoIP-1.6.9.tar.gz
+  - tar xzf GeoIP-1.6.9.tar.gz
+  - cd GeoIP-1.6.9
+  - ./configure --prefix /opt/geoip-1.6.9
+  - make
+  - make check  #     (Used to have some errors, but not in 1.6.2)
+  - sudo make install
+
+  # get the GeoIP database needed for the tests
+  - wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz 
+  - gunzip GeoLiteCity.dat.gz 
+  - sudo mkdir -p /usr/share/GeoIP
+  - sudo mv GeoLiteCity.dat /usr/share/GeoIP/GeoLiteCity.dat
 
 notifications:
   webhooks:
