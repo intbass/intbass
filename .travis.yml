@@ -10,7 +10,7 @@ before_install:
   - wget https://github.com/maxmind/geoip-api-c/releases/download/v1.6.9/GeoIP-1.6.9.tar.gz
   - tar xzf GeoIP-1.6.9.tar.gz
   - cd GeoIP-1.6.9
-  - ./configure --prefix /opt/geoip-1.6.9
+  - ./configure
   - make
   - make check  #     (Used to have some errors, but not in 1.6.2)
   - sudo make install
