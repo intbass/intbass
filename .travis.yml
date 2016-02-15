@@ -20,6 +20,8 @@ before_install:
   - gunzip GeoLiteCity.dat.gz 
   - sudo mkdir -p /usr/share/GeoIP
   - sudo mv GeoLiteCity.dat /usr/share/GeoIP/GeoLiteCity.dat
+  - cd ..
+  - rm -rf GeoIP-1.6.9
 
 notifications:
   webhooks:
