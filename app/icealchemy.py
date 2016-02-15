@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-import GeoIP
+import pygeoip
 
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
@@ -12,7 +12,7 @@ from sqlalchemy import ForeignKey
 
 geo_db_file = "/usr/share/GeoIP/GeoLiteCity.dat"
 if os.path.isfile(geo_db_file):
-    gi = GeoIP.open(geo_db_file, GeoIP.GEOIP_STANDARD)
+    gi = pygeoip.GeoIP(geo_db_file)
 
 
 class ExportDict():

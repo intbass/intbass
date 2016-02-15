@@ -5,18 +5,6 @@ python:
 install: "pip install -r requirements-dev.txt"
 # command to run tests
 script: nosetests -v
-before_install:
-  # get the C part of the GeoIP API
-  - wget https://github.com/maxmind/geoip-api-c/releases/download/v1.6.2/GeoIP-1.6.2.tar.gz
-  - tar xzf GeoIP-1.6.2.tar.gz
-  - cd GeoIP-1.6.2
-  - ./configure
-  - make
-  - make check  #     (Used to have some errors, but not in 1.6.2)
-  - sudo make install
-
-  - cd ..
-  - rm -rf GeoIP-1.6.2
 
 notifications:
   webhooks:
