@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
+import os
 import GeoIP
-import sqlalchemy
 
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
@@ -10,14 +10,18 @@ from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import ForeignKey
 
+geo_db_file = "/usr/share/GeoIP/GeoLiteCity.dat"
+if os.path.isfile(geo_db_file):
+    gi = GeoIP.open(geo_db_file, GeoIP.GEOIP_STANDARD)
 
-gi = GeoIP.open("/usr/share/GeoIP/GeoLiteCity.dat",GeoIP.GEOIP_STANDARD)
+
 class ExportDict():
     def dict(self):
         d = {}
         for column in self.__table__.columns:
             d[column.name] = getattr(self, column.name)
         return d
+
 
 class Server(Base):
     __tablename__ = 'servers'
@@ -66,7 +70,8 @@ class Mount(Base):
     stationid = Column(Integer, ForeignKey('stations.id'))
     station = relationship("Station", backref=backref('mounts', order_by=id))
 
-    def __init__(self, server, info, genre, count, peak, url, max, public, slow, source, start, title, bytesread, bytessent, useragent):
+    def __init__(self, server, info, genre, count, peak, url, max, public,
+                 slow, source, start, title, bytesread, bytessent, useragent):
         self.serverid = server.id
         self.info = info
         self.genre = genre
@@ -111,8 +116,9 @@ class Listener(Base, ExportDict):
         self.address = ip
         self.agent = ua
         self.connected = connected
-        gir = gi.record_by_addr(ip)
-        if gir != None:
+        if gi is not None:
+            gir = gi.record_by_addr(ip)
+        if gir is not None:
             self.lat = gir['latitude']
             self.long = gir['longitude']
             self.city = gir['city']
