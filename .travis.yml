@@ -4,7 +4,7 @@ python:
 # command to install dependencies
 install: "pip install -r requirements-dev.txt"
 # command to run tests
-script: coverage run --source app --omit=*venv* nosetests -v
+script: nosetests --with-coverage -v
 
 after_success:
   - coveralls
