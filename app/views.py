@@ -9,13 +9,14 @@ from app import app, db, lm
 from app.util import admin_required
 from models import Users, File, FileError
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from sqlalchemy.sql import func
 from sqlalchemy.orm import sessionmaker
 from icealchemy import Base, Station, Listener, Mount
 
 import re
 import os
+import datetime
 import logging
 
 logger = logging.getLogger()
@@ -234,14 +235,15 @@ def stations(s):
 @makeresponse
 @passsession
 def listeners(s, tag):
+    age = datetime.datetime.now() + datetime.timedelta(0, 30)
     if tag == 'all':
         listeners = s.query(Listener.lat, Listener.long, func.count('*')).join(Mount).join(Station)\
-                     .filter(text("listeners.last > now() - INTERVAL '30 seconds'"))\
+                     .filter(Listener.last > age)\
                      .group_by(Listener.lat, Listener.long).all()
     else:
         listeners = s.query(Listener.lat, Listener.long, func.count('*')).join(Mount).join(Station)\
                      .filter(Station.tag == tag)\
-                     .filter(text("listeners.last > now() - INTERVAL '30 seconds'"))\
+                     .filter(Listener.last > age)\
                      .group_by(Listener.lat, Listener.long).all()
     result = []
     count = 0
@@ -263,9 +265,10 @@ def station(s, tag):
     result = station.dict()
     if station is None:
         return Response('Not found', status=404)
+    age = datetime.datetime.now() + datetime.timedelta(0, 30)
     result['listeners'] = s.query(Listener).join(Mount)\
                            .filter(Mount.stationid == station.id)\
-                           .filter(text("listeners.last > now() - INTERVAL '30 seconds'"))\
+                           .filter(Listener.last > age)\
                            .count()
     return result
 
