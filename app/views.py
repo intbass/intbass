@@ -203,7 +203,6 @@ def makeresponse(fn):
         elif "text/html" in accept:
             js = json.dumps(data)
             return """<html>
-                <title>TITS i forgot TODO proper rendering</title>
                 <body>%s</body>
                </html>""" % js
 
