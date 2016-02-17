@@ -228,7 +228,8 @@ def passsession(fn):
 @makeresponse
 @passsession
 def stations(s):
-    return s.query(Station.tag, Station.name).all()
+    return map(lambda x: {'tag': x.tag, 'name': x.name},
+               s.query(Station.tag, Station.name).all())
 
 
 @app.route('/station/<tag>/listeners', methods=['GET'])

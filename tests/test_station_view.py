@@ -51,3 +51,24 @@ class TestStationView(BassTestCase):
         data = json.loads(resp.data)
         assert data['listeners'] == 0
         assert data["tag"] == TAG
+
+
+class TestStationsView(BassTestCase):
+    def test_empty(self):
+        resp = self.app.get('/stations')
+        info(resp.status_code)
+        assert resp.status_code == 200
+        assert len(json.loads(resp.data)) == 0
+
+    def test_success(self):
+        station = tests.station(tag=TAG)
+        db.session.add(station)
+        db.session.commit()
+        resp = self.app.get('/stations')
+        info(resp.status_code)
+        assert resp.status_code == 200
+        data = json.loads(resp.data)
+        warn(resp.data)
+        warn(data)
+        assert len(data) == 1
+        assert data[0]['tag'] == TAG
