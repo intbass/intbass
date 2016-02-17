@@ -189,6 +189,8 @@ class Mount(db.Model):
     url = db.Column(db.String)
     max = db.Column(db.String)
     public = db.Column(db.String)
+    published = db.Column(db.Boolean)
+    preference = db.Column(db.Integer)
     slow = db.Column(db.String)
     source = db.Column(db.String)
     start = db.Column(db.String)
@@ -203,8 +205,10 @@ class Mount(db.Model):
     station = relationship("Station", backref=backref('mounts', order_by=id))
 
     def __init__(self, server, info, genre, count, peak, url, max, public,
+                 published, preference, station,
                  slow, source, start, title, bytesread, bytessent, useragent):
         self.serverid = server.id
+        self.stationid = station.id
         self.info = info
         self.genre = genre
         self.count = count
@@ -219,6 +223,8 @@ class Mount(db.Model):
         self.bytesread = bytesread
         self.bytessent = bytessent
         self.useragent = useragent
+        self.preference = preference
+        self.published = published
 
     def __repr__(self):  # pragma: no cover
         return "<Mount(%s:%d)>" % (self.url, self.serverid)

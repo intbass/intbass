@@ -281,16 +281,14 @@ def pls(s, channel):
         mounts = s.query(Mount).join(Station)\
                   .filter(Mount.stationid == Station.id)\
                   .filter(Station.tag == tag)\
-                  .filter(Mount.published is True)\
+                  .filter(Mount.published == True)\
                   .filter(Mount.url.like('%-'+format+'-%'))\
                   .filter(Mount.url.like('%-'+quality))\
-                  .order_by(Mount.preference)
+                  .order_by(Mount.preference)  # noqa spurious E712
         mount_count = mounts.count()
     pls = "[playlist]\nnumberofentries="+str(mount_count)+"\n"
     idx = 0
     for mount in mounts:
-        app.logger.warning('title:%s', mount.title)
-        app.logger.warning('URL:%s', mount.url)
         if mount.url is not None and mount.title is not None:
             idx = idx + 1
             i = str(idx)
