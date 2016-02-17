@@ -42,11 +42,11 @@ class TestTravisView(BassTestCase):
     def test_success(self):
         payload = FakeTravisPayload(status=0)
         resp = self.webhook(payload=payload)
-        import pprint; pprint.pprint(resp.data)
+        info(resp.data)
         assert resp.status_code == 200
 
     def test_fail(self):
         payload = FakeTravisPayload(status=99)
         resp = self.webhook(payload=payload)
-        import pprint; pprint.pprint(resp.data)
+        info(resp.data)
         assert resp.status_code == 200
