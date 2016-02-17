@@ -77,7 +77,7 @@ class Users(db.Model):
         stored = self.password.encode("utf-8")
         return bcrypt.hashpw(submit, stored) == stored
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return '<User %r>' % self.name
 
 # class Roles(db.Model):
@@ -117,7 +117,7 @@ class File:
         if 'TPE1' in audio:
             self.artist = audio['TPE1'].text[0]
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return '<File %r>' % self.filename
 
 
@@ -153,7 +153,7 @@ class Listener(db.Model):
             self.region = gir['region_name']
             self.country = gir['country_name']
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<Listener('%s')>" % self.iid
 
 
@@ -173,7 +173,7 @@ class Station(db.Model):
         self.artist = artist
         self.playing = playing
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<Station('%s')>" % self.tag
 
 
@@ -220,7 +220,7 @@ class Mount(db.Model):
         self.bytessent = bytessent
         self.useragent = useragent
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<Mount(%s:%d)>" % (self.url, self.serverid)
 
 
@@ -240,7 +240,7 @@ class Server(db.Model):
         self.user = user
         self.word = word
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<Server('%s')>" % (self.name)
 
 
