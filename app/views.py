@@ -215,7 +215,7 @@ def makeresponse(fn):
 def passsession(fn):
     @wraps(fn)
     def wrapped(*args, **kwargs):
-        s = session()
+        s = db.session()
         args = [s] + list(args)
         data = fn(*args, **kwargs)
         s.close()
