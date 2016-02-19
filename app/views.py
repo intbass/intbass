@@ -9,25 +9,15 @@ from app import app, db, lm
 from app.util import admin_required
 from models import Users, File, FileError
 
-from sqlalchemy import create_engine
 from sqlalchemy.sql import func
-from sqlalchemy.orm import sessionmaker
-from icealchemy import Base, Station, Listener, Mount
+from app.models import Station, Listener, Mount
 
 import re
 import os
 import datetime
-import logging
-
-logger = logging.getLogger()
+from logging import warn
 
 
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-                       convert_unicode=True)
-sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-@app.errorhandler(401)
 def forbidden(error='Unauthorized'):
     return Response(error, 401, {'WWW-Authenticate': 'None'})
 
@@ -263,9 +253,9 @@ def station(s, tag):
     station = s.query(Station).filter_by(tag=tag).first()
     if station is None:
         return Response('Not found', 404)
-    result = station.dict()
-    if station is None:
-        return Response('Not found', status=404)
+    result = dict(station.__dict__)
+    result.pop('_sa_instance_state', None)
+    warn(result)
     age = datetime.datetime.now() + datetime.timedelta(0, 30)
     result['listeners'] = s.query(Listener).join(Mount)\
                            .filter(Mount.stationid == station.id)\
@@ -304,9 +294,3 @@ def pls(s, channel):
     resp.headers.set('Content-Disposition',
                      'inline; filename="intbass.pls"')
     return resp
-
-
-if __name__ == '__main__':
-    Base.metadata.create_all(engine)
-    logging.basicConfig(filename='/tmp/poo')
-    app.run(debug=True)
