@@ -1,5 +1,7 @@
 import os
 import bcrypt
+import pygeoip
+import datetime
 
 from app import app, db, validate
 from mutagen.mp3 import MP3
@@ -9,6 +11,12 @@ from sqlalchemy.orm import validates
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import ForeignKey
 from flask_login import AnonymousUserMixin
+
+
+geo_db_file = "/usr/share/GeoIP/GeoLiteCity.dat"
+geo_db = None
+if os.path.isfile(geo_db_file):
+        geo_db = pygeoip.GeoIP(geo_db_file)
 
 
 class UserCapabilities(db.Model):
@@ -145,16 +153,25 @@ class Listener(db.Model):
         self.address = ip
         self.agent = ua
         self.connected = connected
-        gir = gi.record_by_addr(ip)
-        if gir is not None:
-            self.lat = gir['latitude']
-            self.long = gir['longitude']
-            self.city = gir['city']
-            self.region = gir['region_name']
-            self.country = gir['country_name']
+        geo_result = None
+        if geo_db is not None:
+            geo_result = geo_db.record_by_addr(ip)
+        if geo_result is not None:
+            self.lat = geo_result['latitude']
+            self.long = geo_result['longitude']
+            self.city = geo_result['city']
+            self.region = geo_result['region_name']
+            self.country = geo_result['country_name']
 
     def __repr__(self):  # pragma: no cover
         return "<Listener('%s')>" % self.iid
+
+    def set_posn(self, lat, lng):
+        self.lat = lat
+        self.long = lng
+
+    def seen(self):
+        self.last = datetime.datetime.now()
 
 
 class Station(db.Model):

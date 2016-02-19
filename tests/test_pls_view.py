@@ -46,8 +46,8 @@ class TestPlaylistView(BassTestCase):
         db.session.add(server)
         db.session.commit()
         db.session.add(tests.mount(title=TITLE, url=URL,
-                                  station=station, server=server,
-                                  published=True))
+                                   station=station, server=server,
+                                   published=True))
         db.session.commit()
         resp = self.app.get('/pls/{}-{}-{}'.format(TAG, ENC, QUAL))
         info(resp.data)

@@ -1,8 +1,24 @@
+from app.models import Mount, Station, Server, Listener
+from logging import warn, info
+import datetime
+
+
 def assert_denied(r):
     assert r.status_code == 401
-    assert r.headers.get('WWW-Authenticate') == 'None'
-from app.models import Mount, Station, Server
-from logging import warn, info
+    assert r.headers.get('WWW-Authenticate') is None
+
+
+def listener(*args, **kwargs):
+    defaults = {
+        'iid': None,
+        'mount': None,
+        'ip': None,
+        'ua': None,
+        'connected': datetime.datetime.now(),
+        }
+    defaults.update(kwargs)
+    assert defaults['mount'] is not None
+    return Listener(**defaults)
 
 
 def station(*args, **kwargs):

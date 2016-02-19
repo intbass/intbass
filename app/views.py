@@ -226,7 +226,7 @@ def stations(s):
 @makeresponse
 @passsession
 def listeners(s, tag):
-    age = datetime.datetime.now() + datetime.timedelta(0, 30)
+    age = datetime.datetime.now() - datetime.timedelta(0, 30)
     if tag == 'all':
         listeners = s.query(Listener.lat, Listener.long, func.count('*')).join(Mount).join(Station)\
                      .filter(Listener.last > age)\
